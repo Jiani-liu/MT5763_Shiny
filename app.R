@@ -222,5 +222,19 @@ server <- (function(input, output,session) {
                        radius=(covid_update$case)^(1/5)+2, stroke=F,
                        color='red', fillOpacity=0.3,
                        popup=covid_update$txt)
-    
+   
+     # The last cases in the world
+    world <- covid_update %>% summarise(case = sum(case, na.rm = TRUE),
+                                        current_confirmed = sum(current_confirmed, na.rm = TRUE),
+                                        death = sum(death, na.rm = TRUE),
+                                        recover = sum(recover, na.rm = TRUE))
+    # Cases around the world group by date
+    world_per_date <- covid %>% group_by(date) %>% summarise(case = sum(case, na.rm = TRUE),
+                                                             current_confirmed = sum(current_confirmed, na.rm = TRUE),
+                                                             death = sum(death, na.rm = TRUE),
+                                                             recover = sum(recover, na.rm = TRUE))
+    country_per_date <- covid %>% group_by(date,country) %>% summarise(case = sum(case, na.rm = TRUE),
+                                                                       current_confirmed = sum(current_confirmed, na.rm = TRUE),
+                                                                       death = sum(death, na.rm = TRUE),
+                                                                       
       
