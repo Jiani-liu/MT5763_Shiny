@@ -181,6 +181,8 @@ server <- (function(input, output,session) {
              country = `Country/Region`) %>% 
       filter(!(country %in% c("Diamond Princess", "MS Zaandam")))  
     
+    options(scipen = 999)
+    
     # Date min
     min_date <- min(covid$date)
     

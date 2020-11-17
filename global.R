@@ -45,6 +45,56 @@ getSelectedCountryData <- function(CountryName){
 }
 
 
+# Current confirmed cases and new daily confirmed cases
+currentConfirmedCases <- function(CountryName){
+  selected.data <- selectCountryData(CountryName)
+  date.min <- format(min(selected.data$date), "%d/%m/%Y")
+  date.max <- format(max(selected.data$date), "%d/%m/%Y")
+  # n <- nrow(selected.data)
+  plot <- ggplot(selected.data, aes(x=date, y=current_confirmed)) +
+    geom_point() + geom_smooth() +
+    xlab('') + ylab('Count') + labs(title=paste0('Current Confirmed Cases from ', date.min,' to ',date.max)) +
+    theme(axis.text.x=element_text(angle=45, hjust=1))
+  return(plot)
+}
+
+# Select daily new confirmed cases by country and return the plot
+DailyNewConfirmedCases <- function(CountryName){
+  selected.data <- selectCountryData(CountryName)
+  date.min <- format(min(selected.data$date), "%d/%m/%Y")
+  date.max <- format(max(selected.data$date), "%d/%m/%Y")
+  # n <- nrow(selected.data)
+  plot <- ggplot(selected.data, aes(x=date, y=new.confirmed)) +
+    geom_point() + geom_smooth() +
+    xlab('') + ylab('Count') + labs(title=paste0('Daily New confirmed Cases from ', date.min,' to ',date.max)) +
+    theme(axis.text.x=element_text(angle=45, hjust=1))
+  return(plot)
+}
+
+# Select new deaths by country and return the plot
+newDeaths <- function(CountryName){
+  selected.data <- selectCountryData(CountryName)
+  date.min <- format(min(selected.data$date), "%d/%m/%Y")
+  date.max <- format(max(selected.data$date), "%d/%m/%Y")
+  plot <- ggplot(selected.data, aes(x=date, y=new.deaths)) +
+    geom_point() + geom_smooth() +
+    xlab('') + ylab('Count') + labs(title=paste0('New Deaths from ', date.min,' to ',date.max)) +
+    theme(axis.text.x=element_text(angle=45, hjust=1))
+  return(plot)
+}
+
+# Select new recovered cases by country and return the plot
+newRecoveredCases <- function(CountryName){
+  selected.data <- selectCountryData(CountryName)
+  date.min <- format(min(selected.data$date), "%d/%m/%Y")
+  date.max <- format(max(selected.data$date), "%d/%m/%Y")
+  plot <- ggplot(selected.data, aes(x=date, y=new.recoverd)) +
+    geom_point() + geom_smooth() +
+    xlab('') + ylab('Count') + labs(title=paste0('New Recovered Cases from ', date.min,' to ',date.max)) +
+    theme(axis.text.x=element_text(angle=45, hjust=1))
+  return(plot)
+}
+
 # Theme for Visualization
 
 theme_algo <- theme(
