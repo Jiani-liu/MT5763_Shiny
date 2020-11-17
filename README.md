@@ -15,7 +15,7 @@ Follow [this](https://fancy-statistic.shinyapps.io/shiny_covid/) link for the in
 
 Mapper
 
-![Shiny app interface](www/mapper.jpeg)
+![Shiny app interface](www/mapper.png)
 
 The top section of the page shows the global total cases, death cases, recovered cases, and the number of countries/regions affected by the COVID 19.
 Below is an interactive map showing the current distribution of total cases around the world. The size of the red circle reflects the number of cases. When the cursor moves to the red circle, there will be a text box showing the current country/region name and total cases, active cases, death cases, recovered cases and CFR(Case-Fatality Ratio). Users can zoom in and out of a map to explore a particular country or region.
@@ -24,7 +24,7 @@ The data source of this app is updated once a day, but the app is updated once a
 
 Search by Country
 
-![Shiny app interface](www/Serarchbycountry.png)
+![Shiny app interface](www/searchbycountry.png)
 
 This page shows a single national data, the user can select the country they want to know, the country list is reverse ordered by the cumulative cases number, after user make a choice, the information boxes and data table will synchronous update. Users can also download the data in CSV format.
 
