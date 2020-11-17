@@ -158,4 +158,16 @@ server <- (function(input, output,session) {
   
   #Refresh data for every hour
   autoInvalidate <- reactiveTimer(1000*60*60)
+  observe({
+    autoInvalidate()
+    print("Refreshing...")
+    
+    ## Confirmed
+    case_confirmed <- readFunc("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv","case")
+    
+    ## Recovery
+    case_recover <- readFunc("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv","recover")
+    
+    ## Death
+    case_death <- readFunc("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv","death")
       
