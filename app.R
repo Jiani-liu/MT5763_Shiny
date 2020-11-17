@@ -658,5 +658,18 @@ server <- (function(input, output,session) {
     
   })
   
+  ## data
+  output$countries_in_date_table <- DT::renderDataTable({
+    autoInvalidate()
+    dt$case <- format(dt$case, big.mark=" ")
+    dt$new.confirmed <- format(dt$new.confirmed, big.mark=" ")
+    dt$current_confirmed <- format(dt$current_confirmed, big.mark=" ")
+    dt$recover <- format(dt$recover, big.mark=" ")
+    dt$death <- format(dt$death, big.mark=" ")
+    dt$new.deaths <- format(dt$new.deaths, big.mark=" ")
+    DT::datatable(dt[, c("ranking","country", "case","new.confirmed","current_confirmed","recover", "death","new.deaths","death.rate")],
+                  rownames = FALSE, options = list(pageLength = 50, order = list(list(2, 'desc')))
+    )
+  })
   
       
