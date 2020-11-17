@@ -324,6 +324,40 @@ server <- (function(input, output,session) {
   })
   
   ## GLOBAL
+  
+  #valueboxoutputs
+  output$world_confirmed <- renderValueBox({
+    autoInvalidate()
+    valueBox(subtitle = "Number of Cases", 
+             color = "red",
+             value = number(sum(covid_update$case, na.rm = T), accuracy = 1, big.mark = ","),
+             icon = icon("virus"))
+  })
+  
+  output$world_death <- renderValueBox({
+    autoInvalidate()
+    valueBox(subtitle = "Number of Death", 
+             color = "black",
+             value = number(sum(covid_update$death, na.rm = T), accuracy = 1, big.mark = ","),
+             icon = icon("book-dead"))
+  })
+  
+  output$world_recover <- renderValueBox({
+    autoInvalidate()
+    valueBox(subtitle = "Number of Recovery", 
+             color = "green",
+             value = number(sum(covid_update$recover, na.rm = T), accuracy = 1, big.mark = ","),
+             icon = icon("heartbeat"))  
+    
+  })
+  output$world_affect <- renderValueBox({
+    autoInvalidate()
+    valueBox(subtitle = "Number of Countries/regions affected", 
+             color = "yellow",
+             value = number(nrow(subset(covid_update, country!="Diamond Princess Cruise Ship"))),
+             icon = icon("globe"))
+  })
+  
   # map
   output$map_leaflet <- renderLeaflet({
     autoInvalidate()
@@ -463,5 +497,166 @@ server <- (function(input, output,session) {
     
     ggplotly(p1, tooltip = "text")
   })
+  
+  
+  ## Search by country
+  output$countries_list<-renderUI({
+    autoInvalidate()
+    hide(id = "loading-content", anim = TRUE, animType = "fade") 
+    selectInput("country","Choose a country", "Select a country:", choices= country_list)
+  })
+  
+  # diplay ranking
+  output$ranking <- renderUI({
+    autoInvalidate()
+    if(!is.null(input$country)){
+      country <- dt %>% filter(country == input$country)
+      HTML(paste('<b style = "font-size: 20px">Ranking: ',country$ranking,'</b>'))
+    }
+  })
+  
+  # InfoBoxOutputs
+  output$country_confirmed <- renderInfoBox({
+    autoInvalidate()
+    if(!is.null(input$country))
+    {
+      country <- countryCurrentData()
+      infoBox(
+        tags$b("Confirmed"),
+        country$case,
+        tags$span("Current cases: ",tags$b(country$current_confirmed),style = "font-size: 14px"),
+        icon = icon("procedures"),
+        color = "red", fill = TRUE
+      )
+    }
+    else
+    {
+      infoBox(
+        "Confirmed", "Loading...", icon = icon("procedures"),
+        color = "red", fill = TRUE
+      )
+    }
+  })
+  
+  output$country_deaths <- renderInfoBox({
+    autoInvalidate()
+    if(!is.null(input$country))
+    {
+      country <- dt %>% filter(country == input$country)
+      infoBox(
+        tags$b("Deaths"),
+        country$death,
+        tags$span("Death rate: ",tags$b(country$death.rate),style = "font-size: 14px"),
+        icon = icon("bed"),
+        color = "black", fill = TRUE
+      )
+    }
+    else
+    {
+      infoBox(
+        "Deaths", "Loading...", icon = icon("procedures"),
+        color = "black", fill = TRUE
+      )
+    }
+  })
+  
+  output$country_recovered <- renderInfoBox({
+    autoInvalidate()
+    if(!is.null(input$country))
+    {
+      country <- countryCurrentData()
+      infoBox(
+        tags$b("Recovered"),
+        country$recover,
+        icon = icon("heartbeat"),
+        color = "green", fill = TRUE
+      )
+    }
+    else
+    {
+      infoBox(
+        "Recovered", "Loading...", icon = icon("heartbeat"),
+        color = "green", fill = TRUE
+      )
+    }
+  })
+  
+  
+  output$confirmed <- renderValueBox({
+    autoInvalidate()
+    valueBox(
+      format(world$case, big.mark=" "),icon = icon("procedures"), tags$span(
+        tags$b("Confirmed", style = "font-size: 20px"),
+        tags$br(),
+        tags$span("New Confirmed: ", style = "font-size: 13px",tags$b(format(data.world.date.max$new.confirmed, big.mark=" "))),
+        tags$br(),
+        tags$span("Current Confirmed: ", style = "font-size: 13px",tags$b(format(data.world.date.max$current_confirmed, big.mark=" ")))
+      ),
+      
+      color = "orange"
+    )
+  })
+  
+  output$deaths <- renderValueBox({
+    autoInvalidate()
+    valueBox(
+      format(world$death, big.mark=" "), tags$span(
+        tags$b("Deaths", style = "font-size: 20px"),
+        tags$br(),
+        tags$span("New Deaths: ", style = "font-size: 13px",tags$b(format(data.world.date.max$new.deaths, big.mark=" "))),
+        tags$br(),
+        tags$span("Daily Rate: ", style = "font-size: 13px",tags$b(data.world.date.max$rate.daily," %"))
+      ),
+      icon = icon("bed"),
+      color = "red"
+    )
+  })
+  
+  output$recovered <- renderValueBox({
+    autoInvalidate()
+    valueBox(
+      format(world$recover, big.mark=" "), tags$span(
+        tags$b("Recovered", style = "font-size: 20px"),
+        tags$br(),
+        tags$br(),
+        tags$span("New Recovered: ", style = "font-size: 13px",tags$b(format(data.world.date.max$new.recoverd, big.mark=" "))),
+        tags$br()
+      ), 
+      icon = icon("heartbeat"),
+      color = "lime"
+    )
+  })
+  
+  
+  countryData <- reactive({
+    autoInvalidate()
+    country <- getSelectedCountryData(input$country)
+    country$case <- format(country$case, big.mark=" ")
+    country$new.confirmed <- format(country$new.confirmed, big.mark=" ")
+    country$current_confirmed <- format(country$current_confirmed, big.mark=" ")
+    country$recover <- format(country$recover, big.mark=" ")
+    country$death <- format(country$death, big.mark=" ")
+    country$new.deaths <- format(country$new.deaths, big.mark=" ")
+    country
+    
+  })
+  
+  countryCurrentData <- reactive({
+    autoInvalidate()
+    country <- countryData() %>% filter(date == max_date)
+    country
+  })
+  
+  output$country_data <- DT::renderDataTable({
+    autoInvalidate()
+    if(!is.null(input$country)){
+      country <- countryData()
+      DT::datatable(country[, c("date","new.confirmed","new.deaths","new.recoverd")],
+                    rownames = FALSE, options = list(pageLength = 10, order = list(list(0, 'desc')))
+      )
+    }
+    
+  })
+  
   
       
