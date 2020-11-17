@@ -190,4 +190,37 @@ server <- (function(input, output,session) {
     # Replace NA with 0
     covid <- replace_NA(covid)
     
+    # Data from the latest date only
+    
+    covid_update <- covid %>% 
+      filter(date == max_date) 
+    
+    
+    covid_update %<>% select(c(date,state,country, case, recover, death, cfr, current_confirmed,
+                               Lat,Long)) %>%
+      mutate(cfr_percent = percent(cfr,accuracy = 0.01)) %>%
+      mutate(txt=paste0('<b>',country,' ','</span>','</b>',state,
+                        '<hr style = "margin-top: 5px;margin-bottom: 5px">',
+                        'Total cases: ','<b>', format(case, big.mark=" "),'</b>','</span>',
+                        '<br>',
+                        'Active cases: ','<b>', format(current_confirmed, big.mark=" "),'</b>','</span>',
+                        '<br>',
+                        'Recovered: ','<b>', format(recover, big.mark=" "),'</b>','</span>',
+                        '<br>',
+                        'Deaths: ','<b>', format(death, big.mark=" "),'</b>','</span>',
+                        '<br>',
+                        'CFR: ','<b>', format(cfr_percent, big.mark=" "),'</b>','</span>'
+      ))
+    
+    map <- leaflet(width="100%") %>% 
+      addTiles() %>% 
+      setView(lng = 0, 
+              lat = 25,
+              zoom = 2) %>% 
+      addCircleMarkers(covid_update$Long,
+                       covid_update$Lat,
+                       radius=(covid_update$case)^(1/5)+2, stroke=F,
+                       color='red', fillOpacity=0.3,
+                       popup=covid_update$txt)
+    
       
