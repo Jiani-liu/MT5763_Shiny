@@ -29,3 +29,11 @@ dataLong <- function(countryName){
   long <- data.long %>% filter(country == countryName)
   return(long)
 }
+
+# Get country data by name
+selectCountryData <- function(CountryName){
+  data.country <- data %>% filter(country == CountryName)
+  data.country[is.na(data.country)] <- 0
+  return(data.country)
+}
+
