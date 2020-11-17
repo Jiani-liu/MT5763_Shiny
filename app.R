@@ -86,3 +86,28 @@ ui<-dashboardPage(
               )
               
       ),
+      # search by country
+      tabItem(tabName = "bycountry",
+              fluidPage(
+                box(title = "Country Data",width = 12,
+                    div(style="text-align: center;",
+                        div(
+                          style="display: inline-block;",
+                          tags$span(htmlOutput("ranking"), style="position:relative; top:-1em")),
+                        div(
+                          style="padding: 15px;width: 50%; display: inline-block;",
+                          uiOutput("countries_list",width = "100%"))),
+                    
+                    tags$br(),
+                    infoBoxOutput("country_confirmed"),
+                    infoBoxOutput("country_deaths"),
+                    infoBoxOutput("country_recovered"),
+                    tags$br(),
+                    
+                    div(id="country_dt",
+                        DT::dataTableOutput("country_data") %>% 
+                          withSpinner(color="#0dc5c1",type = getOption("spinner.type", default = 6))),
+                    # Download csv file Button
+                    downloadButton("downloadData", "Download Data",style="float:right;")),
+                h6("Source: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University"))),
+      
