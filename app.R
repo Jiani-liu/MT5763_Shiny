@@ -278,5 +278,49 @@ server <- (function(input, output,session) {
                                               rate.lower='Lower bound',
                                               rate.upper='Upper bound'))
     
+    ## Top 10 countries
+    # Ranking by confirmed cases after selecting the current date
+    data.latest.all <- data %>% filter(date == max_date) %>%
+      select(country, date,
+             case, new.confirmed, current_confirmed,
+             recover, death, new.deaths, death.rate=rate.lower) %>% 
+      mutate(ranking = dense_rank(desc(case)))
+    # dataTable
+    dt <- data.latest.all %>% filter(country!='World')
+    dt$ranking <- NULL
+    dt <- dt %>% mutate(ranking = dense_rank(desc(case)))
+    dt$death.rate <- paste(dt$death.rate,"%" , sep=" ")
     
+    dt <- dt[order(dt$ranking),]
+    country_list <- dt$country %>% as.character()
+    # Selecting top 10 countries including World (11)
+    k <- 10
+    top.countries <- data.latest.all %>% filter(ranking <= k+1) %>%
+      arrange(ranking) %>% pull(country) %>% as.character()
+    
+    
+    # put all other countries in a single group of others
+    data.latest <- data.latest.all %>% filter(!is.na(country)) %>%
+      mutate(country=ifelse(ranking <= k + 1, as.character(country), 'Others')) %>%
+      mutate(country=country %>% factor(levels=c(top.countries)))
+    data.latest %<>% group_by(country) %>%
+      summarise(case=sum(case), new.confirmed=sum(new.confirmed),
+                current_confirmed=sum(current_confirmed),
+                recovere=sum(recover), death=sum(death), new.deaths=sum(new.deaths)) %>%
+      mutate(death.rate=(100 * death/case) %>% round(1))
+    data.latest %<>% select(c(country, case, death, death.rate,
+                              new.confirmed, new.deaths, current_confirmed))
+    
+    # Preparing data for plots
+    data.latest.long <- data.latest  %>%
+      gather(key=type, value=count, -country)
+    data.latest.long %<>% mutate(type=recode_factor(type,
+                                                    case='Total Confirmed',
+                                                    death='Total Deaths',
+                                                    death.rate='Death Rate (%)',
+                                                    new.confirmed='New Confirmed (compared with one day before)',
+                                                    new.deaths='New Deaths (compared with one day before)',
+                                                    current_confirmed='Current Confirmed'))
+  })
+  
       
