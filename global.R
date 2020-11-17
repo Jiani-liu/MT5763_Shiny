@@ -23,3 +23,9 @@ replace_NA <- function(filename){
   filename$current_confirmed <- filenameNA$current_confirmed
   return(filename)
 }
+
+# Get data by selected country
+dataLong <- function(countryName){
+  long <- data.long %>% filter(country == countryName)
+  return(long)
+}
