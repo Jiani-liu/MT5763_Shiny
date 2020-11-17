@@ -695,6 +695,6 @@ server <- (function(input, output,session) {
     if(input$refresh){session$reload()} }) 
 })
 
-
+shinyApp(ui, server)
   
       
