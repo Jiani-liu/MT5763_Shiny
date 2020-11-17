@@ -236,5 +236,47 @@ server <- (function(input, output,session) {
     country_per_date <- covid %>% group_by(date,country) %>% summarise(case = sum(case, na.rm = TRUE),
                                                                        current_confirmed = sum(current_confirmed, na.rm = TRUE),
                                                                        death = sum(death, na.rm = TRUE),
-                                                                       
+                                                                       recover = sum(recover, na.rm = TRUE))
+    ## Daily increase in deaths and recovered cases
+    # Set NA on increases on day 1
+    data <- country_per_date
+    data %<>% arrange(country, date)
+    n <- nrow(data)
+    day1 <<- min(data$date)
+    data %<>% mutate(new.confirmed = ifelse(date == day1, NA, case - lag(case, n=1)),
+                     new.deaths = ifelse(date == day1, NA, death - lag(death, n=1)),
+                     new.recoverd = ifelse(date == day1, NA, recover - lag(recover, n=1)))
+    # Change negative numbers to 0
+    data %<>% mutate(new.confirmed = ifelse(new.confirmed < 0, 0, new.confirmed),
+                     new.deaths = ifelse(new.deaths < 0, 0, new.deaths),
+                     new.recoverd = ifelse(new.recoverd < 0, 0, new.recoverd))
+    # Increase in deaths based on total deaths and confirmed cases
+    data %<>% mutate(rate.upper = (100 * death / (death + recover)) %>% round(1))
+    # Lower bound for deaths based on confirmed cases
+    data %<>% mutate(rate.lower = (100 * death / case) %>% round(1))
+    # Mortality rate per day
+    data %<>% mutate(rate.daily = (100 * new.deaths / (new.deaths + new.recoverd)) %>% round(1))
+    
+    data[is.na(data)] <- 0
+    
+    # Prepare data for making the plots
+    data.long <- data %>%
+      select(c(country, date, case, current_confirmed, recover, death)) %>%
+      gather(key=type, value=count, -c(country, date))
+    
+    data.long %<>% mutate(type=recode_factor(type, Case='Total Confirmed',
+                                             current.confirmed='Current Confirmed',
+                                             recover='Recovered',
+                                             death='Deaths'))
+    
+    # Data frame for the rates of each country
+    rates.long <- data %>%
+      select(c(country, date, rate.upper, rate.lower, rate.daily)) %>%
+      gather(key=type, value=count, -c(country, date))
+    
+    rates.long %<>% mutate(type=recode_factor(type, rate.daily='Daily',
+                                              rate.lower='Lower bound',
+                                              rate.upper='Upper bound'))
+    
+    
       
