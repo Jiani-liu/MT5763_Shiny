@@ -401,7 +401,67 @@ server <- (function(input, output,session) {
     
   })
   
+  ##Comparison
   
+  #date
+  output$date_list<-renderUI({
+    autoInvalidate()
+    dateInput("date", label = "Select Date", value = as.Date(max_date))
+  })
   
+  # Bar Chart
+  output$stat_death <- renderPlotly({
+    autoInvalidate()
+    p1 <- covid %>% 
+      filter(date == (input$date)) %>% 
+      drop_na(case, recover, death) %>% 
+      group_by(country) %>% 
+      summarise(death = sum(death)) %>% 
+      arrange(desc(death)) %>% 
+      slice(1:10) %>% 
+      ggplot(aes(death, reorder(country, death), fill = death,
+                 
+                 text = glue("Country : {country}
+                         Death : {number(death, big.mark = ',')}")
+      )) +
+      geom_col(color = "firebrick") +
+      theme_minimal() +
+      labs(x = "Number of Death",
+           y = NULL,
+           title = "Top Countries Based on Number of Death"
+      ) +
+      scale_fill_gradient(low = "lightyellow", high = "firebrick") +
+      scale_x_continuous(labels = number_format(big.mark = ",")) +
+      theme(legend.position = "none")
+    
+    ggplotly(p1, tooltip = "text")
+  })
+  
+  output$stat_recover <- renderPlotly({
+    autoInvalidate()
+    p1 <- covid %>% 
+      filter(date == (input$date)) %>% 
+      drop_na(case, recover, death) %>%
+      group_by(country) %>% 
+      summarise(recover = sum(recover)) %>% 
+      arrange(desc(recover)) %>% 
+      slice(1:10) %>% 
+      ggplot(aes(recover, reorder(country, recover), fill = recover,
+                 
+                 text = glue("Country : {country}
+                                               Recover : {number(recover, big.mark = ',')}")
+      )) +
+      geom_col(color = "#3bac01") +
+      theme_minimal() +
+      labs(x = "Number of Recovery",
+           y = NULL,
+           title = "Top Countries Based on Number of Recovery"
+      ) +
+      scale_fill_gradient(low = "lightyellow", high = "#3bac01") +
+      scale_x_continuous(labels = number_format(big.mark = ",")) +
+      theme(legend.position = "none")
+    
+    ggplotly(p1, tooltip = "text")
+  })
   
       
