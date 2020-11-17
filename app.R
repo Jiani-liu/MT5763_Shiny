@@ -672,4 +672,29 @@ server <- (function(input, output,session) {
     )
   })
   
+  # Download csv of selected dataset ----
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$country, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv2(countryData(), file, row.names = TRUE)
+      contentType = "text/csv"
+    }
+  )  
+  
+  # Download
+  output$download <- downloadHandler( 
+    filename = function() {paste("data-", Sys.Date(), ".csv", sep="")},
+    content = function(file) {
+      write.csv(covid, file, row.names = T)
+    })
+  
+  # Refresh
+  observe({
+    if(input$refresh){session$reload()} }) 
+})
+
+
+  
       
