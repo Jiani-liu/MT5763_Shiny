@@ -152,4 +152,10 @@ ui<-dashboardPage(
     )
   )
 )
+
+
+server <- (function(input, output,session) {
+  
+  #Refresh data for every hour
+  autoInvalidate <- reactiveTimer(1000*60*60)
       
