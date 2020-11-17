@@ -37,3 +37,20 @@ selectCountryData <- function(CountryName){
   return(data.country)
 }
 
+# Get all data for a selected country
+getSelectedCountryData <- function(CountryName){
+  country <- data %>% filter(country == CountryName)
+  country$country <- NULL
+  return(country)
+}
+
+
+# Theme for Visualization
+
+theme_algo <- theme(
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major = element_line(colour = "gray80"),
+  panel.grid.minor = element_blank(),
+  plot.title = element_text(family = "serif", size = 18)
+)
+
