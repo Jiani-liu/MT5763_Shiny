@@ -323,4 +323,41 @@ server <- (function(input, output,session) {
                                                     current_confirmed='Current Confirmed'))
   })
   
+  ## GLOBAL
+  # map
+  output$map_leaflet <- renderLeaflet({
+    autoInvalidate()
+    map})
+  
+  # date
+  output$clean_date_reactive <- renderText({
+    paste("Last Updated:",covid_update$date[1])
+  })
+  
+  # plot 1
+  output$cumulative_plot <- renderPlot({
+    autoInvalidate()
+    ggplot(world_per_date,aes(date, case/1000000, color="brown")) + 
+      geom_line() + geom_point(size = 1, alpha = 0.8)+
+      scale_y_continuous(labels = number_format(big.mark = ",")) +
+      scale_x_date(labels = date_format(format = "%b")
+      ) + theme_bw() +
+      ylab("cumulative cases (million)") + theme(legend.title = element_blank(), legend.position = "", plot.title = element_text(size=10), 
+                                                 plot.margin = margin(5, 12, 5, 5))
+  })
+  
+  # plot 2
+  output$epi_curve <- renderPlot({
+    autoInvalidate()
+    ggplot(world_per_date,aes(date, current_confirmed/1000000, fill="brown")) + 
+      geom_bar(position="stack", stat="identity") + 
+      ylab("new cases (million)")+
+      scale_y_continuous(labels = number_format(big.mark = ",")) +
+      scale_x_date(labels = date_format(format = "%b")
+      ) + theme_bw() +
+      theme(legend.title = element_blank(), legend.position = "", plot.title = element_text(size=10), 
+            plot.margin = margin(5, 12, 5, 5))
+    
+  })
+  
       
