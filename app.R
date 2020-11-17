@@ -360,4 +360,36 @@ server <- (function(input, output,session) {
     
   })
   
+  # Trend Line
+  output$trend_line <- renderPlotly({
+    autoInvalidate()
+    p1 <- country_per_date %>% 
+      filter(country %in% input$trend_country) %>% 
+      ggplot(aes(date, case, color = country, group = country,
+                 
+                 text = glue("Country : {paste0(country)}
+                     Date : {date}
+                     Case : {number(case, big.mark = ',')}
+                     Current confirmed : {number(current_confirmed,big.mark = ',')}
+                     Recovery : {number(recover, big.mark = ',')}
+                     Death : {number(death, big.mark = ',')}")
+      )) +
+      scale_y_continuous(labels = number_format(big.mark = ",")) +
+      scale_x_date(date_breaks = "1 month",
+                   labels = date_format(format = "%b")
+      ) +
+      geom_line() +
+      labs(title = "COVID-19 Case by Country",
+           x = NULL,
+           y = "Number of Cases",
+           color = "country"
+      ) +
+      theme_bw() +
+      theme_algo
+    
+    ggplotly(p1, tooltip = "text")  
+  })
+  
+  
+  
       
