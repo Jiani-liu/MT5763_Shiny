@@ -23,3 +23,14 @@ library(scales)
 library(glue)
 library(leaflet)
 library(DT)
+
+ui<-dashboardPage(
+  dashboardHeader(title = "COVID-19 Real Time Dashboard"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem(text = "Mapper", icon = icon("globe-africa"), tabName = "map"),  
+      menuItem(text = "Search by country", icon = icon("search-location"), tabName = "bycountry"),
+      menuItem(text = "Trend", icon = icon("chart-line"), tabName = "trend"),
+      menuItem(text = "Comparison", icon = icon("chart-bar"), tabName = "stat"),
+      menuItem(text = "Data", icon = icon("table"), tabName = "data"))),
+  
