@@ -110,4 +110,16 @@ ui<-dashboardPage(
                     # Download csv file Button
                     downloadButton("downloadData", "Download Data",style="float:right;")),
                 h6("Source: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University"))),
+      # Statistics
+      tabItem(tabName = "stat",
+              
+              h2("Covid-19 Comparative Case", align = "center"),
+              
+              uiOutput("date_list", align = "center"),
+              
+              fluidRow(
+                column(6, plotlyOutput("stat_death")),
+                column(6, plotlyOutput("stat_recover"))),
+              h6("Source: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University")),
+      
       
