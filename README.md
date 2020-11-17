@@ -13,7 +13,7 @@ This site is updated daily based on data published by Johns Hopkins University. 
 
 Follow [this](https://fancy-statistic.shinyapps.io/shiny_covid/) link for the interactive Shiny app. A introduction of the interface is provided below.
 
-Mapper
+### Mapper
 
 ![Shiny app interface](www/mapper.png)
 
@@ -22,25 +22,25 @@ Below is an interactive map showing the current distribution of total cases arou
 The information box on the right of the map shows the update time of the data. The first chart is a bar chart showing the number of new cases over time, and the second is a line graph showing the cumulative number of cases over time.
 The data source of this app is updated once a day, but the app is updated once an hour. Users can also click "Refresh now" to get the latest data.
 
-Search by Country
+### Search by Country
 
 ![Shiny app interface](www/searchbycountry.png)
 
 This page shows a single national data, the user can select the country they want to know, the country list is reverse ordered by the cumulative cases number, after user make a choice, the information boxes and data table will synchronous update. Users can also download the data in CSV format.
 
-Trend
+### Trend
 
 ![Shiny app interface](www/trend.jpeg)
 
 This dashboard shows the cumulative number of cases in one or more countries over time. It allows users to select one or more countries to explore or compare growth trend in different countries.
 
-Comparison
+### Comparison
 
 ![Shiny app interface](www/comparison.jpeg)
 
 This page with two bar charts compares the top 10 countries by number of death cases to the top 10 countries by number of recovered cases on a given date. Users can select a date in the top date box to view the comparison for that day.
 
-Data
+### Data
 
 ![Shiny app interface](www/data.jpeg)
 
