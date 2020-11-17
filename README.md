@@ -40,6 +40,11 @@ Comparison
 
 This page with two bar charts compares the top 10 countries by number of death cases to the top 10 countries by number of recovered cases on a given date. Users can select a date in the top date box to view the comparison for that day.
 
+Data
+
+![Shiny app interface](www/data.jpeg)
+
+
 Users can access and download the full data here by clicking the download button.
 
 
