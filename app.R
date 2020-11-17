@@ -170,4 +170,24 @@ server <- (function(input, output,session) {
     
     ## Death
     case_death <- readFunc("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv","death")
+    
+    ## Merge/Join data.frame
+    covid <- case_confirmed %>% 
+      left_join(case_recover) %>% 
+      left_join(case_death) %>% 
+      mutate(cfr = death/case)  %>% 
+      mutate(current_confirmed = case  - death - recover) %>% 
+      rename(state = `Province/State`,
+             country = `Country/Region`) %>% 
+      filter(!(country %in% c("Diamond Princess", "MS Zaandam")))  
+    
+    # Date min
+    min_date <- min(covid$date)
+    
+    # Date max
+    max_date <- max(covid$date)
+    
+    # Replace NA with 0
+    covid <- replace_NA(covid)
+    
       
