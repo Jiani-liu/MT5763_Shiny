@@ -390,6 +390,18 @@ server <- (function(input, output,session) {
     ggplotly(p1, tooltip = "text")  
   })
   
+  # selection UI
+  output$countries_list2<-renderUI({
+    autoInvalidate()
+    pickerInput("trend_country", "Country/Region:",   
+                choices = country_list, 
+                options = list('actions-box' = TRUE, 'none-selected-text'= "Please make a selection!"),
+                selected = country_list[1:3],
+                multiple = TRUE)
+    
+  })
+  
+  
   
   
       
