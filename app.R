@@ -121,5 +121,15 @@ ui<-dashboardPage(
                 column(6, plotlyOutput("stat_death")),
                 column(6, plotlyOutput("stat_recover"))),
               h6("Source: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University")),
+      # Trend
+      tabItem(tabName = "trend", 
+              
+              h2("COVID-19 Region Plots", align = "center"),
+              uiOutput("countries_list2",width="100%", align = "center"),
+              
+              plotlyOutput("trend_line", height = "500px"),
+              span(tags$i(h6("Reported cases are subject to significant variation in testing policy and capacity between countries.")), style="color:#045a8d"),
+              span(tags$i(h6("Occasional anomalies (e.g. spikes in daily case counts) are generally caused by changes in case definitions.")), style="color:#045a8d"),
+              h6("Source: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University")),
       
       
