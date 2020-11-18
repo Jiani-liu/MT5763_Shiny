@@ -1,13 +1,37 @@
+library(shinydashboard)
+library(dashboardthemes)
+library(shinyjs)
+library(shinycssloaders)
+library(shinyWidgets)
+library(jsonlite)
+library(httr)
+library(htmltools)
+library(htmlwidgets)
+library(geojsonio)
+library(furrr)
 
-# function to read data and rename columns
+# data wrangling
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(magrittr)
+
+# visualization
+library(ggplot2)
+library(plotly)
+library(scales)
+library(glue)
+library(leaflet)
+library(DT)
+
 readFunc <- function(filePath,label) { 
   read.csv(url(filePath),check.names = F) %>%
     pivot_longer(-c(`Province/State`, `Country/Region`, Lat, Long), 
                  names_to = "date", values_to = label) %>% 
     mutate(date = mdy(date))
 }
-
 # Replace NA with 0
+
 replace_NA <- function(filename){
   # Identify numeric columns
   i <- sapply(filename, is.numeric)
@@ -24,24 +48,13 @@ replace_NA <- function(filename){
   return(filename)
 }
 
-# Get data by selected country
-dataLong <- function(countryName){
-  long <- data.long %>% filter(country == countryName)
-  return(long)
-}
+
 
 # Get country data by name
 selectCountryData <- function(CountryName){
   data.country <- data %>% filter(country == CountryName)
   data.country[is.na(data.country)] <- 0
   return(data.country)
-}
-
-# Get all data for a selected country
-getSelectedCountryData <- function(CountryName){
-  country <- data %>% filter(country == CountryName)
-  country$country <- NULL
-  return(country)
 }
 
 
@@ -94,6 +107,14 @@ newRecoveredCases <- function(CountryName){
     theme(axis.text.x=element_text(angle=45, hjust=1))
   return(plot)
 }
+
+# Get all data for a selected country
+getSelectedCountryData <- function(CountryName){
+  country <- data %>% filter(country == CountryName)
+  country$country <- NULL
+  return(country)
+}
+
 
 # Theme for Visualization
 
