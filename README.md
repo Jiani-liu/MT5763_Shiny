@@ -18,7 +18,7 @@ Follow [this](https://fancy-statistic.shinyapps.io/shiny_covid/) link for the in
 ![Shiny app interface](www/mapper.png)
 
 The top section of the page shows the global total cases, death cases, recovered cases, and the number of countries/regions affected by the COVID 19.
-Below is an interactive map showing the current distribution of total cases around the world. The size of the red circle reflects the number of cases. When the cursor moves to the red circle, there will be a text box showing the current country/region name and total cases, active cases, death cases, recovered cases and CFR(Case-Fatality Ratio). Users can zoom in and out of a map to explore a particular country or region.
+Below is an interactive map showing the current distribution of total cases around the world. The size of the red circle reflects the number of cases. When the user clicks the red circle, there will be a text box showing the current country/region name and total cases, active cases, death cases, recovered cases and CFR(Case-Fatality Ratio). Users can zoom in and out of a map to explore a particular country or region.
 The information box on the right of the map shows the update time of the data. The first chart is a bar chart showing the number of new cases over time, and the second is a line graph showing the cumulative number of cases over time.
 The data source of this app is updated once a day, but the app is updated once an hour. Users can also click "Refresh now" to get the latest data.
 
@@ -26,24 +26,23 @@ The data source of this app is updated once a day, but the app is updated once a
 
 ![Shiny app interface](www/searchbycountry.png)
 
-This page shows a single national data, the user can select the country they want to know, the country list is reverse ordered by the cumulative cases number, after user make a choice, the information boxes and data table will synchronous update. Users can also download the data in CSV format.
+This page shows a single national data, the user can select the country they want to know, the country list is reverse ordered by the cumulative cases number, after user make a choice, the information boxes and data table will synchronous update. The table contains the new confirmed, death and recovery data. Users can also download the data in CSV format by clicking the download button.
 
 ### Trend
 
 ![Shiny app interface](www/trend.jpeg)
 
-This dashboard shows the cumulative number of cases in one or more countries over time. It allows users to select one or more countries to explore or compare growth trend in different countries.
+This dashboard shows the cumulative number of cases in one or more countries over time. It allows users to select one or more countries to explore or compare growth trend in different countries. When the cursor moves to the line, it will show up the information contain the relevant data for that country on that day.
 
 ### Comparison
 
 ![Shiny app interface](www/comparison.jpeg)
 
-This page with two bar charts compares the top 10 countries by number of death cases to the top 10 countries by number of recovered cases on a given date. Users can select a date in the top date box to view the comparison for that day.
+This page with two bar charts compares the top 10 countries by number of death cases to the top 10 countries by number of recovered cases on a given date. Users can select a date in the top date box to view the comparison for that day. Moving cursor to the bar can display the data for that country.
 
 ### Data
 
 ![Shiny app interface](www/data.jpeg)
-
 
 Users can access and download the full data here by clicking the download button.
 
@@ -53,12 +52,12 @@ Users can access and download the full data here by clicking the download button
 
 Key elements of the analysis code are as follows:
 - *global.R* –  an R script that saved all functions which used to processing data.
-- *app.R* - an R script that extracts and formats dynamic input time-series data from the [Johns Hopkins Center for Systems Science and Engineering github page](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series).And used to render the Shiny app. This consists of several plotting functions as well as the ui (user interface) and server code required to render the Shiny app. 
+- *server.R* - an R script that extracts and formats dynamic input time-series data from the [Johns Hopkins Center for Systems Science and Engineering github page](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series). This contains server code required to render the Shiny app. 
+- *ui.R* -an R script that used to design the user interface, it contains interactive and display function.
 
 ## Updates
 
-The [Shiny app](https://fancy-statistic.shinyapps.io/shiny_covid/) automatically updates itself based on the code in *app.R* and updated case data can be downloaded directly from the app via the 'Download data' tab.  
-
+The [Shiny app](https://fancy-statistic.shinyapps.io/shiny_covid/) automatically updates itself based on the code in *server.R* and updated case data can be downloaded directly from the app via the 'Download data' tab.  
 
 ## Other resources
 
